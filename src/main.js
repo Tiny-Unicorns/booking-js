@@ -94,7 +94,7 @@ function TimekitBooking() {
       // Render available timeslots in FullCalendar
       if(response.data.length > 0) renderCalendarEvents(response.data);
 
-      // Render test ribbon if enabled 
+      // Render test ribbon if enabled
       if (response.headers['timekit-testmode']) renderTestModeRibbon();
 
     }).catch(function(response){
@@ -184,7 +184,7 @@ function TimekitBooking() {
       // Render available timeslots in FullCalendar
       if(slots.length > 0) renderCalendarEvents(slots);
 
-      // Render test ribbon if enabled 
+      // Render test ribbon if enabled
       if (response.headers['timekit-testmode']) renderTestModeRibbon();
 
     }).catch(function(response){
@@ -521,62 +521,106 @@ function TimekitBooking() {
 
     var fieldsTemplate = require('./templates/booking-fields.html');
     var template = require('./templates/booking-page.html');
+    var surveyHolder = require('./templates/survey-page.html');
+    var surveyTemplate = require('./templates/booking-survey.html');
 
     var dateFormat = config.localization.bookingDateFormat || moment.localeData().longDateFormat('LL');
     var timeFormat = config.localization.bookingTimeFormat || moment.localeData().longDateFormat('LT');
 
     var allocatedResource = eventData.users ? eventData.users[0].name : false;
 
-    bookingPageTarget = $(template.render({
-      chosenDate:               moment(eventData.start).format(dateFormat),
-      chosenTime:               moment(eventData.start).format(timeFormat) + ' - ' + moment(eventData.end).format(timeFormat),
-      allocatedResourcePrefix:  config.localization.strings.allocatedResourcePrefix,
-      allocatedResource:        allocatedResource,
-      closeIcon:                require('!svg-inline!./assets/close-icon.svg'),
-      checkmarkIcon:            require('!svg-inline!./assets/checkmark-icon.svg'),
-      loadingIcon:              require('!svg-inline!./assets/loading-spinner.svg'),
-      errorIcon:                require('!svg-inline!./assets/error-icon.svg'),
-      submitText:               config.localization.strings.submitText,
-      successMessageTitle:      config.localization.strings.successMessageTitle,
-      successMessageBody:       interpolate.sprintf(config.localization.strings.successMessageBody, '<span class="booked-email"></span>'),
-      fields:                   config.bookingFields
-    }, {
-      formFields: fieldsTemplate
-    }));
+    if(window.errorHere === true){
+        console.log("errorHere");
+        bookingPageTarget = $(require('./templates/noUserId.html').render({
+            closeIcon:                require('!svg-inline!./assets/close-icon.svg')
+        }));
 
-    var form = bookingPageTarget.children('.bookingjs-form');
+        bookingPageTarget.children('.bookingjs-idError-close').click(function(e) {
+          e.preventDefault();
+          hideBookingPage();
+        });
 
-    bookingPageTarget.children('.bookingjs-bookpage-close').click(function(e) {
-      e.preventDefault();
-      var bookingHasBeenCreated = $(form).hasClass('success');
-      if (bookingHasBeenCreated) getAvailability();
-      hideBookingPage();
-    });
+    } else {
+        var fieldsObject = {
+            chosenDate:               moment(eventData.start).format(dateFormat),
+            chosenTime:               moment(eventData.start).format(timeFormat) + ' - ' + moment(eventData.end).format(timeFormat),
+            allocatedResourcePrefix:  config.localization.strings.allocatedResourcePrefix,
+            allocatedResource:        allocatedResource,
+            closeIcon:                require('!svg-inline!./assets/close-icon.svg'),
+            checkmarkIcon:            require('!svg-inline!./assets/checkmark-icon.svg'),
+            loadingIcon:              require('!svg-inline!./assets/loading-spinner.svg'),
+            errorIcon:                require('!svg-inline!./assets/error-icon.svg'),
+            submitText:               config.localization.strings.submitText,
+            successMessageTitle:      config.localization.strings.successMessageTitle,
+            successMessageBody:       interpolate.sprintf(config.localization.strings.successMessageBody, '<span class="booked-email"></span>'),
+            fields:                   config.bookingFields,
+            dateHere:                 Date.today().isBefore(Date.today().set({ day: 15})),
+            dateHere2:                Date.today().addMonths(1).set({day:1}).toString('MMM dS'),
+            moneyQuestion:            "Do you make over " + (accounting.formatMoney(unitPrice / .3)) + " in Gross Household Monthly Income?",
+        }
 
-    if (eventData.users) {
-      utils.logDebug(['Available users for chosen timeslot:', eventData.users], config);
+        if(!window.iFrameQ){
+            if(!surveyComplete){
+                var surveyPage = $(surveyHolder.render(fieldsObject,{
+                    formFields: surveyTemplate
+                }));
+
+                rootTarget.append(surveyPage);
+
+                $("#surveyComplete").on("click",function(e){
+                    e.preventDefault();
+                    console.log("Survey Done.");
+                    //validate that dropdown was completed
+                    //send data to endpoint
+                    window.surveyComplete = true;
+                    $(".surveyPage").remove();
+                });
+
+                setTimeout(function(){
+                    surveyPage.addClass("show");
+                }, 100);
+            }
+        }
+
+        bookingPageTarget = $(template.render(fieldsObject, {
+          formFields: fieldsTemplate
+        }));
+
+        var form = bookingPageTarget.children('.bookingjs-form');
+
+        bookingPageTarget.children('.bookingjs-bookpage-close').click(function(e) {
+          e.preventDefault();
+          var bookingHasBeenCreated = $(form).hasClass('success');
+          if (bookingHasBeenCreated) getAvailability();
+          hideBookingPage();
+        });
+
+        if (eventData.users) {
+          utils.logDebug(['Available users for chosen timeslot:', eventData.users], config);
+        }
+
+
+        form.find('.bookingjs-form-input').on('input', function() {
+          var field = $(this).closest('.bookingjs-form-field');
+          if (this.value) field.addClass('bookingjs-form-field--dirty');
+          else field.removeClass('bookingjs-form-field--dirty');
+        });
+
+        form.submit(function(e) {
+          submitBookingForm(this, e, eventData);
+        });
+
+        // Show powered by Timekit message
+        if (config.showCredits) {
+          renderPoweredByMessage(bookingPageTarget);
+        }
+
+        $(document).on('keyup', function(e) {
+          // escape key maps to keycode `27`
+          if (e.keyCode === 27) { hideBookingPage(); }
+        });
+
     }
-
-
-    form.find('.bookingjs-form-input').on('input', function() {
-      var field = $(this).closest('.bookingjs-form-field');
-      if (this.value) field.addClass('bookingjs-form-field--dirty');
-      else field.removeClass('bookingjs-form-field--dirty');
-    });
-
-    form.submit(function(e) {
-      submitBookingForm(this, e, eventData);
-    });
-
-    // Show powered by Timekit message
-    if (config.showCredits) {
-      renderPoweredByMessage(bookingPageTarget);
-    }
-
-    $(document).on('keyup', function(e) {
-      // escape key maps to keycode `27`
-      if (e.keyCode === 27) { hideBookingPage(); }
-    });
 
     rootTarget.append(bookingPageTarget);
 

@@ -1,0 +1,56 @@
+<div class="bookingjs-bookpage surveyPage" style="z-index:200">
+  <div class="bookingjs-bookpage-header">
+    <h2 class="bookingjs-bookpage-date">Please Complete Survey</h2>
+    <h6 class="bookingjs-bookpage-time">*all fields required for qualification*</h6>
+    {{#allocatedResource}}
+      <span class="bookingjs-bookpage-resource-prefix">{{ allocatedResourcePrefix }}</span>
+      <h3 class="bookingjs-bookpage-resource">{{ allocatedResource }}</h3>
+    {{/allocatedResource}}
+  </div>
+  <form class="bookingjs-form" action="#">
+    <div class="switch-field">
+          <div class="switch-title">{{moneyQuestion}}</div>
+          <div class="radioHolder">
+              <input type="radio" id="moneyQuestionLeft" name="money" value="yes" checked="true">
+              <label for="moneyQuestionLeft">Yes</label>
+              <input type="radio" id="moneyQuestionRight" name="money" value="no">
+              <label for="moneyQuestionRight">No</label>
+          </div>
+    </div>
+    <div class="switch-field">
+          <div class="switch-title">Are you presently part of any Housing Voucher program?</div>
+          <div class="radioHolder">
+              <input type="radio" id="voucherLeft" name="voucher" value="yes" checked="true">
+              <label for="voucherLeft">Yes</label>
+              <input type="radio" id="voucherRight" name="voucher" value="no">
+              <label for="voucherRight">No</label>
+          </div>
+    </div>
+    <br/>
+    <div class="select">
+        <input type="radio" name="date">
+        <i class="toggle icon icon-arrow-down"></i>
+        <i class="toggle icon icon-arrow-up"></i>
+        <span class="placeholder">When are you looking to move?</span>
+        <label class="date">
+            <input type="radio" name="date" value="asap">
+            <span class="title">ASAP</span>
+        </label>
+        <label class="date">
+            <input type="radio" name="date" value="date1">
+            <span class="title">{{# dateHere}} Date Here {{ else }} This Date {{/ dateHere}}</span>
+        </label>
+        <label class="date">
+            <input type="radio" name="date" value="firstOfNextMonth">
+            <span class="title">{{ dateHere2 }}</span>
+        </label>
+        <label class="date">
+            <input type="radio" name="date" value="jBrowsing">
+            <span class="title">Just Browsing - Not Sure</span>
+        </label>
+    </div>
+    <button id="surveyComplete" class="bookingjs-form-button" type="submit">
+      <span class="inactive-text">Send It!</span>
+    </button>
+  </form>
+</div>
