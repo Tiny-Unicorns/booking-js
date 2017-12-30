@@ -1,15 +1,44 @@
-<div class="bookingjs-form-field">
-  <label
-    for="whenMove"
-    class="bookingjs-form-label label-whenMove">
-    "When are you looking to move?"
-  </label>
-  <input
-    id="whenMove"
-    class="bookingjs-form-input whenMove"
-    type="whenMove"
-    name="whenMove"
-    placeholder="When are you looking to move?"
-    required
-  />
+<div class="bookingjs-form-field bookingjs-survey-field">
+    <intput type="text" id="moneyInput" placeholder="Money">
+        <div class="switch-field">
+              <div class="switch-title"><span>Do you make over</span><span>{{moneyQuestion}} per year?</span></div>
+              <div class="radioHolder">
+                  <input type="radio" id="moneyQuestionLeft" name="money" value="yes" checked="true" style="">
+                  <label for="moneyQuestionLeft">Yes</label>
+                  <input type="radio" id="moneyQuestionRight" name="money" value="no">
+                  <label for="moneyQuestionRight">No</label>
+              </div>
+        </div>
+    </intput>
+</div>
+<div class="bookingjs-form-field bookingjs-survey-field">
+    <intput type="text" id="voucherInput" placeholder="Voucher">
+        <div class="switch-field">
+              <div class="switch-title"><span>Are you part of a</span><span>Housing Voucher program?</span></div>
+              <div class="radioHolder">
+                  <input type="radio" id="voucherLeft" name="voucher" value="yes" checked="true">
+                  <label for="voucherLeft">Yes</label>
+                  <input type="radio" id="voucherRight" name="voucher" value="no">
+                  <label for="voucherRight">No</label>
+              </div>
+        </div>
+    </intput>
+</div>
+<div class="bookingjs-form-field bookingjs-survey-field">
+    <intput type="text" id="dateInput" placeholder="Date">
+        <div class="select">
+            <span>When would you like to move in?</span>
+            <select>
+                <option>Select Date</option>
+                <option>ASAP</option>
+                {{#dateHere}}
+                <option>{{dateHere}}</option>
+                {{/dateHere}}
+                <option>{{ dateHere2 }}</option>
+                <option>Just Browsing - Not Sure</option>
+            </select>
+            <div class="select_arrow">
+            </div>
+        </div>
+    </intput>
 </div>
