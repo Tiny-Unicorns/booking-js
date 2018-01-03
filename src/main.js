@@ -568,14 +568,14 @@ function TimekitBooking() {
 
                 rootTarget.append(surveyPage);
 
+                $('#formSelect').select2();
+
                 $("#surveyComplete").on("click",function(e){
                     e.preventDefault();
                     console.log("Survey Done.");
-                    //validate that dropdown was completed
-                    //send data to endpoint
-
                     window.surveyComplete = true;
-                    $(".surveyPage").remove();
+                    console.log("please work",$("#surveyForm"));
+                    initializeSurvey();
                 });
 
                 setTimeout(function(){
