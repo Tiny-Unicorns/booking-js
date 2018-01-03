@@ -530,7 +530,6 @@ function TimekitBooking() {
     var allocatedResource = eventData.users ? eventData.users[0].name : false;
 
     if(window.errorHere === true){
-        console.log("errorHere");
         bookingPageTarget = $(require('./templates/noUserId.html').render({
             closeIcon:                require('!svg-inline!./assets/close-icon.svg')
         }));
@@ -572,9 +571,7 @@ function TimekitBooking() {
 
                 $("#surveyComplete").on("click",function(e){
                     e.preventDefault();
-                    console.log("Survey Done.");
                     window.surveyComplete = true;
-                    console.log("please work",$("#surveyForm"));
                     initializeSurvey();
                 });
 

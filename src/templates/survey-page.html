@@ -1,7 +1,7 @@
 <div class="bookingjs-bookpage surveyPage" style="z-index:200">
   <div class="bookingjs-bookpage-header">
-    <h2 class="bookingjs-bookpage-date">Please Complete Survey</h2>
-    <h6 class="bookingjs-bookpage-time">*all fields required for qualification*</h6>
+    <h2 class="bookingjs-bookpage-date surveyError thanksBox">Please Complete Survey</h2>
+    <h6 class="bookingjs-bookpage-time thanksBox">*all fields required for qualification*</h6>
     {{#allocatedResource}}
       <span class="bookingjs-bookpage-resource-prefix">{{ allocatedResourcePrefix }}</span>
       <h3 class="bookingjs-bookpage-resource">{{ allocatedResource }}</h3>
@@ -14,7 +14,8 @@
           </div>
     </div>
     <button id="surveyComplete" class="bookingjs-form-button" type="submit">
-      <span class="inactive-text">Send It!</span>
+       <span class="error-text">{{& errorIcon }}</span>
+       <span class="inactive-text">Send It!</span>
     </button>
   </form>
 </div>
