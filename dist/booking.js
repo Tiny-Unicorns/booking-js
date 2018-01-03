@@ -629,9 +629,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    console.log("Survey Done.");
 	                    //validate that dropdown was completed
 	                    //send data to endpoint
-	                    if(!isBefore15){
-	                        // dropdown value is there, is it clicked?
-	                    }
+	
 	                    window.surveyComplete = true;
 	                    $(".surveyPage").remove();
 	                });
