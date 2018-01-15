@@ -540,7 +540,6 @@ function TimekitBooking() {
         });
 
     } else {
-        window.isBefore15 = Date.today().isBefore(Date.today().set({ day: 15}));
         var fieldsObject = {
             chosenDate:               moment(eventData.start).format(dateFormat),
             chosenTime:               moment(eventData.start).format(timeFormat) + ' - ' + moment(eventData.end).format(timeFormat),
@@ -556,7 +555,8 @@ function TimekitBooking() {
             fields:                   config.bookingFields,
             dateHere:                 Date.today().isBefore(Date.today().set({ day: 15})) ? Date.today().set({ day: 15}).toString('MMM dS') : undefined,
             dateHere2:                Date.today().addMonths(1).set({day:1}).toString('MMM dS'),
-            moneyQuestion:            (accounting.formatMoney(unitPrice / .3))
+            moneyQuestion:            (accounting.formatMoney(unitPrice / .3)),
+            unitLocation:             userInfo.location
         }
 
         if(!window.iFrameQ){
@@ -611,7 +611,7 @@ function TimekitBooking() {
 
         // Show powered by Timekit message
         if (config.showCredits) {
-          renderPoweredByMessage(bookingPageTarget);
+          //renderPoweredByMessage(bookingPageTarget);
         }
 
         $(document).on('keyup', function(e) {

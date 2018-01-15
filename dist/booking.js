@@ -667,7 +667,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        // Show powered by Timekit message
 	        if (config.showCredits) {
-	          renderPoweredByMessage(bookingPageTarget);
+	          //renderPoweredByMessage(bookingPageTarget);
 	        }
 	
 	        $(document).on('keyup', function(e) {
