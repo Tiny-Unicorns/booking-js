@@ -556,7 +556,7 @@ function TimekitBooking() {
             dateHere:                 Date.today().isBefore(Date.today().set({ day: 15})) ? Date.today().set({ day: 15}).toString('MMM dS') : undefined,
             dateHere2:                Date.today().addMonths(1).set({day:1}).toString('MMM dS'),
             moneyQuestion:            (accounting.formatMoney(unitPrice / .3)),
-            unitLocation:             userInfo.location
+            users:                    userInfo
         }
 
         if(!window.iFrameQ){
