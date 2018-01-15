@@ -538,7 +538,15 @@ function TimekitBooking() {
           e.preventDefault();
           hideBookingPage();
         });
+    } else if(window.renderContact){
+        bookingPageTarget = $(require('./templates/contact.html').render({
+            closeIcon:                require('!svg-inline!./assets/close-icon.svg')
+        }));
 
+        bookingPageTarget.children('.bookingjs-idError-close').click(function(e) {
+          e.preventDefault();
+          hideBookingPage();
+        });
     } else {
         var fieldsObject = {
             chosenDate:               moment(eventData.start).format(dateFormat),
@@ -559,7 +567,7 @@ function TimekitBooking() {
             users:                    userInfo
         }
 
-        if(!window.iFrameQ){
+        if(!window.iFrameQ && !window.errorHere){
             if(!surveyComplete){
                 var surveyPage = $(surveyHolder.render(fieldsObject,{
                     formFields: surveyTemplate
